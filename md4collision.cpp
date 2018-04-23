@@ -31,12 +31,15 @@ struct Node{
     uint a, b, c, d;
     Node(){}
     Node(uint _a, uint _b, uint _c, uint _d):a(_a), b(_b), c(_c), d(_d){}
-} chains[N];
+} chains[N], _chains[N];
 #define a(x) chains[x].a
 #define b(x) chains[x].b
 #define c(x) chains[x].c
 #define d(x) chains[x].d
-
+#define _a(x) _chains[x].a
+#define _b(x) _chains[x].b
+#define _c(x) _chains[x].c
+#define _d(x) _chains[x].d
 //--------------------------------head-----------------------------------
 
 inline void init(){
@@ -59,18 +62,16 @@ inline uint get_m0(){
 }
 
 inline uint get_m1(){
-    uint m1 = myrand();
-    d(1) = cl( d(0) + f(a(1), b(0), c(0)) + m1, shift[1]);
-    //printf("    m0 = %x, d1 = %x\n", m1, d(1));
+    uint m = myrand();
+    d(1) = cl( d(0) + f(a(1), b(0), c(0)) + m, shift[1]);
     uint d1_7 = bit(d(1), 7);
     uint d1_8 = bit(d(1), 8), a1_8 = bit(a(1), 8);
     uint d1_11 = bit(d(1), 11), a1_11 = bit(a(1), 11);
-
+    // change
     d(1) ^= (d1_7 << 6);
     d(1) ^= cl((d1_8 ^ a1_8), 7);
     d(1) ^= cl((d1_11 ^ a1_11), 10);
-    m1 = cr(d(1), shift[1]) - d(0) - f(a(1), b(0), c(0));
-    //printf("--> m1 = %x, d1 = %x\n", m1, d(1));
+    m = cr(d(1), shift[1]) - d(0) - f(a(1), b(0), c(0));
     return m1;
 }
 
