@@ -6,7 +6,7 @@
 using namespace std;
 typedef long long LL;
 #define uint unsigned int
-const uint N = 22;
+const uint N = 33;
 const uint shift[] = {3, 7, 11, 19};
 inline uint f(const uint &x, const uint &y, const uint &z){return (x & y) | ((!x) & z);}
 inline uint g(const uint &x, const uint &y, const uint &z){return (x & y) | (x & z) | (y & z);}
@@ -25,7 +25,9 @@ inline uint myrand(){
 inline uint bit(const uint &a, const uint &idx){
     return (a & (1 << (idx-1))) >> (idx-1);
 }
-
+inline uint xbit(const uint &a, const uint &idx){
+    return (a & (1 << (idx-1)));
+}
 
 struct Node{
     uint a, b, c, d;
@@ -40,6 +42,7 @@ struct Node{
 #define _b(x) _chains[x].b
 #define _c(x) _chains[x].c
 #define _d(x) _chains[x].d
+uint chain[N];
 //--------------------------------head-----------------------------------
 
 inline void init(){
@@ -50,14 +53,12 @@ inline void init(){
 inline uint get_m0(){
     uint m0 = myrand();
     a(1) = cl( a(0) + f(b(0), c(0), d(0)) + m0, shift[0]);
-    //printf("    m0 = %08x, a1 = %08x\n", m0, a(1));
     uint a_1_7 = bit(a(1), 7);
     uint b_0_7 = bit(b(0), 7);
     if (a_1_7 != b_0_7){
         a(1) ^= cl((a_1_7 ^ b_0_7), 6);
         m0 = cr(a(1), shift[0]) - a(0) - f(b(0), c(0), d(0));
     }
-    //printf("--> m0 = %08x, a1 = %08x, %d == %d\n", m0, a(1), bit(a(1), 7), bit(b(0), 7));
     return m0;
 }
 
@@ -72,7 +73,7 @@ inline uint get_m1(){
     d(1) ^= cl((d1_8 ^ a1_8), 7);
     d(1) ^= cl((d1_11 ^ a1_11), 10);
     m = cr(d(1), shift[1]) - d(0) - f(a(1), b(0), c(0));
-    return m1;
+    return m;
 }
 
 inline uint get_m2(){
@@ -96,23 +97,100 @@ inline uint get_m2(){
 inline uint get_m3(){
     uint m = myrand();
     b(1) = cl(b(0) + f(c(1), d(1), a(1)) + m, shift[3]);
-    //printf("    m2 = %x, c1 = %x\n", m2, c(1));
-    uint b1_7 = bit(b(1), 7);
-    uint b1_8 = bit(b(1), 8);
-    uint b1_11 = bit(b(1), 11);
-    uint b1_26 = bit(b(1), 26);
-
-    // b1_7
-    b(1) ^= ((!b1_7) << 6); // b1_7 = 1
-    b(1) ^= (b1_8 << 7);    // b1_8 = 0
-    b(1) ^= (b1_11 << 10);  // b1_11 = 0
-    b(1) ^= (b1_11 << 10);  // b1_26 = 0
+    b(1) ^= xbit(~b(1), 7);  // b1_7 = 1
+    b(1) ^= xbit(b(1), 8);   // b1_8 = 0
+    b(1) ^= xbit(b(1), 11);  // b1_11 = 0
+    b(1) ^= xbit(b(1), 26);  // b1_26 = 0
     m = cr(b(1), shift[3]) - (b(0) + f(c(1), d(1), a(1)));
-    //printf("--> m1 = %x, d1 = %x\n", m1, d(1));
     return m;
 }
 
+inline uint get_m4(){
+    uint m = myrand();
+    a(2) = cl(a(1) + f(b(1), c(1), d(1)) + m, shift[0]);
+    a(2) ^= xbit(~a(2), 8);
+    a(2) ^= xbit(~a(2), 11);
+    a(2) ^= xbit(a(2), 26);
+    a(2) ^= xbit(a(2), 14) ^ xbit(b(1), 14);
+    m = cr(a(2), shift[0]) - (a(1) + f(b(1), c(1), d(1)));
+    return m;
+}
 
+inline uint get_m5(){
+    uint m = myrand();
+    d(2) = cl(d(1) + f(a(2), b(1), c(1)) + m, shift[1]);
+    d(2) ^= xbit(d(2), 14);
+    d(2) ^= xbit(d(2), 19) ^ xbit(a(2), 19);
+    d(2) ^= xbit(d(2), 20) ^ xbit(a(2), 20);
+    d(2) ^= xbit(d(2), 21) ^ xbit(a(2), 21);
+    d(2) ^= xbit(d(2), 22) ^ xbit(a(2), 22);
+    d(2) ^= xbit(~d(2), 26);
+    m = cr(d(2), shift[1]) - (d(1) + f(a(2), b(1), c(1)));
+    return m;
+}
+
+inline uint get_m6(){
+    uint m = myrand();
+    c(2) = cl(c(1) + f(d(2), a(2), b(1)) + m, shift[2]);
+    c(2) ^= xbit(c(2), 13) ^ xbit(d(2), 13);
+    c(2) ^= xbit(d(2), 14);
+    c(2) ^= xbit(c(2), 15) ^ xbit(d(2), 15);
+    c(2) ^= xbit(c(2), 19);
+    c(2) ^= xbit(c(2), 20);
+    c(2) ^= xbit(~c(2), 21);
+    c(2) ^= xbit(c(2), 22);
+    m = cr(c(2), shift[2]) - (c(1) + f(d(2), a(2), b(1)));
+    return m;
+}
+
+inline uint get_m7(){
+    uint m = myrand();
+    b(2) = cl(b(1) + f(c(2), d(2), a(2)) + m, shift[3]);
+    b(2) ^= xbit(~b(2), 13);
+    b(2) ^= xbit(~b(2), 14);
+    b(2) ^= xbit(b(2), 15);
+    b(2) ^= xbit(b(2), 17) ^ xbit(c(2), 17);
+    b(2) ^= xbit(b(2), 19);
+    b(2) ^= xbit(b(2), 20);
+    b(2) ^= xbit(b(2), 21);
+    b(2) ^= xbit(b(2), 22);
+    m = cr(b(2), shift[3]) - (b(1) + f(c(2), d(2), a(2)));
+    return m;
+}
+
+inline uint get_m8(){
+    uint m = myrand();
+    a(3) = cl(a(2) + f(b(2), c(2), d(2)) + m, shift[0]);
+    a(3) ^= xbit(~a(3), 13);
+    a(3) ^= xbit(~a(3), 14);
+    a(3) ^= xbit(~a(3), 15);
+    a(3) ^= xbit(a(3), 17);
+    a(3) ^= xbit(a(3), 19);
+    a(3) ^= xbit(a(3), 20);
+    a(3) ^= xbit(a(3), 21);
+    a(3) ^= xbit(~a(3), 22);
+    a(3) ^= xbit(a(3), 23) ^ xbit(b(2), 23);
+    a(3) ^= xbit(a(3), 26) ^ xbit(b(2), 26);
+    m = cr(a(3), shift[0]) - (a(2) + f(b(2), c(2), d(2)));
+    return m;
+}
+
+inline uint get_m9(){
+    uint m = myrand();
+    d(3) = cl(d(2) + f(a(3), b(2), c(2)) + m, shift[1]);
+    d(3) ^= xbit(~d(3), 13);
+    d(3) ^= xbit(~d(3), 14);
+    d(3) ^= xbit(~d(3), 15);
+    d(3) ^= xbit(d(3), 17);
+    d(3) ^= xbit(d(3), 20);
+    d(3) ^= xbit(~d(3), 21);
+    d(3) ^= xbit(~d(3), 22);
+    d(3) ^= xbit(d(3), 23);
+    d(3) ^= xbit(~d(3), 26);
+    d(3) ^= xbit(d(3), 30) ^ xbit(a(3), 30);
+    m = cr(a(3), shift[1]) - (a(2) + f(b(2), c(2), d(2)));
+    return m;
+}
 
 int main(){
     init();
@@ -123,7 +201,13 @@ int main(){
         mes0[++top] = mes1[top] = get_m1(); mes1[top] += (1<<31);
         mes0[++top] = mes1[top] = get_m2(); mes1[top] += (1<<31) - (1<<28);
         mes0[++top] = mes1[top] = get_m3();
-        //mes0[++top] = get_m4();
+        mes0[++top] = mes1[top] = get_m4();
+        mes0[++top] = mes1[top] = get_m5();
+        mes0[++top] = mes1[top] = get_m6();
+        mes0[++top] = mes1[top] = get_m7();
+        mes0[++top] = mes1[top] = get_m8();
+        mes0[++top] = mes1[top] = get_m9();
+
 
         top++;
         for (int i = 0; i < top; i++){
