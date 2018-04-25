@@ -192,9 +192,129 @@ inline uint get_m9(){
     return m;
 }
 
+inline uint get_m10(){
+	uint m = myrand();
+    c(3) = cl(c(2) + f(d(3), a(3), b(2)) + m, shift[2]);
+    //printf("    m2 = %x, c1 = %x\n", m2, c(1));
+    uint c3_17 = bit(c(3), 17);
+    uint c3_20 = bit(c(3), 20);
+    uint c3_21 = bit(c(3), 21);
+    uint c3_22 = bit(c(3), 22);
+    uint c3_23 = bit(c(3), 23);
+    uint c3_26 = bit(c(3), 26);
+    uint c3_30 = bit(c(3), 30);
+    uint c3_32 = bit(c(3), 32);uint d3_32 = bit(d(3), 32);
+    //
+    c(3) ^= ((!c3_17) << 16); // c3_17 = 1
+    c(3) ^= (c3_20 << 19);    // b3_20 = 0
+    c(3) ^= (c3_21 << 20);  // c3_21 = 0
+    c(3) ^= (c3_22 << 21);  // c3_22 = 0
+    c(3) ^= (c3_23 << 22);  // c3_23 = 0
+    c(3) ^= (c3_26 << 25);  // c3_26 = 0
+    c(3) ^= ((!c3_30) << 29);  // c3_30 = 1
+    c(3) ^= ((c3_32 ^ d3_32) << 31);  // c3_32 = d3_32
+    m = cr(c(3), shift[2]) - (c(2) + f(d(3), a(3), b(2)));
+    //printf("--> m1 = %x, d1 = %x\n", m1, d(1));
+    return m;
+}
+
+inline uint get_m11(){
+	uint m = myrand();
+    b(3) = cl(b(2) + f(c(3), d(3), a(3)) + m, shift[3]);
+    //printf("    m2 = %x, c1 = %x\n", m2, c(1));
+    uint b3_20 = bit(b(3), 20);
+    uint b3_21 = bit(b(3), 21);
+    uint b3_22 = bit(b(3), 22);
+    uint b3_23 = bit(b(3), 23); uint c3_23 = bit(c(3), 23);
+    uint b3_26 = bit(b(3), 26);
+    uint b3_30 = bit(b(3), 30);
+    uint b3_32 = bit(b(3), 32);
+    //
+
+    b(3) ^= (b3_20 << 19);    // b3_20 = 0
+    b(3) ^= ((!b3_21) << 20);  // b3_21 = 1
+    b(3) ^= ((!b3_22) << 21); // b3_22 = 1
+    b(3) ^= ((b3_23 ^ c3_23 ) << 22);  // b3_23 = c3_23
+    b(3) ^= ((!b3_26) << 25);  // b3_26 = 1
+    b(3) ^= (b3_30 << 29);  // b3_30 = 0
+    b(3) ^= (b3_32 << 31);  // b3_32 = 0
+    m = cr(b(3), shift[3]) - (b(2) + f(c(3), d(3), a(3)));
+    //printf("--> m1 = %x, d1 = %x\n", m1, d(1));
+    return m;
+}
+
+inline uint get_m12(){
+	uint m = myrand();
+    a(4) = cl(a(3) + f(b(3), c(3), d(3)) + m, shift[0]);
+    //printf("    m2 = %x, c1 = %x\n", m2, c(1));
+    uint a4_23 = bit(a(4), 23);
+    uint a4_26 = bit(a(4), 26);
+    uint a4_27 = bit(a(4), 27); uint b3_27 = bit(b(3), 27);
+    uint a4_29 = bit(a(4), 29); uint b3_29 = bit(b(3), 29);
+    uint a4_30 = bit(a(4), 30);
+    uint a4_32 = bit(a(4), 32);
+    //
+
+    a(4) ^= (a4_23 << 22);    // a4_23 = 0
+    a(4) ^= (a4_26 << 25);  // a4_26 = 0
+    a(4) ^= ((a4_27 ^ b3_27) << 26); // a4_27 = b3_27
+    a(4) ^= ((a4_29 ^ b3_29) << 28);  // a4_29 = b3_29
+    a(4) ^= ((!a4_30) << 29);  // a4_30 = 1
+    a(4) ^= (a4_32 << 31);  // a4_32 = 0
+    m = cr(a(4), shift[0]) - (a(3) + f(b(3), c(3), d(3)));
+    //printf("--> m1 = %x, d1 = %x\n", m1, d(1));
+    return m;
+}
+
+inline uint get_m13(){
+	uint m = myrand();
+    d(4) = cl(d(3) + f(a(4), b(3), c(3)) + m, shift[1]);
+    //printf("    m2 = %x, c1 = %x\n", m2, c(1));
+
+    d(4) ^= xbit(d(4), 23);    // d4_23 = 0
+    d(4) ^= xbit(d(4), 26);  // d4_26 = 0
+    d(4) ^= xbit(~d(4), 27); // d4_27 = 1
+    d(4) ^= xbit(~d(4), 29);  // d4_29 = 1
+    d(4) ^= xbit(d(4), 30);  // d4_30 = 0
+    d(4) ^= xbit(~d(4), 32);  // d4_32 = 1
+    m = cr(d(4), shift[1]) - (d(3) + f(a(4), b(3), c(3)));
+    //printf("--> m1 = %x, d1 = %x\n", m1, d(1));
+    return m;
+}
+
+inline uint get_m14(){
+	uint m = myrand();
+    c(4) = cl(c(3) + f(d(4), a(4), b(3)) + m, shift[2]);
+    c(4) ^= xbit(c(4), 19) ^ xbit(d(4), 19);
+    c(4) ^= xbit(~c(4), 23);
+    c(4) ^= xbit(~c(4), 26);
+    c(4) ^= xbit(c(4), 27);
+    c(4) ^= xbit(c(4), 29);
+    c(4) ^= xbit(c(4), 30);
+    m = cr(c(4), shift[2]) - (c(3) + f(d(4), a(4), b(3)));
+    return m;
+}
+
+inline uint get_m15(){
+	uint m = myrand();
+    b(4) = cl(b(3) + f(c(4), d(4), a(4)) + m, shift[3]);
+    b(4) ^= xbit(b(4), 19);
+    b(4) ^= xbit(~b(4), 26);
+    b(4) ^= xbit(~b(4), 27);
+    b(4) ^= xbit(~b(4), 29);
+    b(4) ^= xbit(b(4), 30);
+    m = cr(b(4), shift[3]) - (b(3) + f(c(4), d(4), a(4)));
+    return m;
+}
+
+uint md4check(int* mes){
+
+}
+
+
 int main(){
     init();
-    uint mes0[N], mes1[N];
+    uint mes0[N], mes1[N];//mes0 for M  mes1 for M'
     for (uint cnt = 3; cnt--;){
         int top = -1;
         mes0[++top] = mes1[top] = get_m0();
@@ -207,8 +327,12 @@ int main(){
         mes0[++top] = mes1[top] = get_m7();
         mes0[++top] = mes1[top] = get_m8();
         mes0[++top] = mes1[top] = get_m9();
-
-
+        mes0[++top] = mes1[top] = get_m10();
+        mes0[++top] = mes1[top] = get_m11();
+        mes0[++top] = mes1[top] = get_m12(); mes1[top] -= (1<<16);
+        mes0[++top] = mes1[top] = get_m13();
+        mes0[++top] = mes1[top] = get_m14();
+        mes0[++top] = mes1[top] = get_m15();
         top++;
         for (int i = 0; i < top; i++){
         	printf("i = %d m = %08x, m' = %08x\n", i, mes0[i], mes1[i]);
