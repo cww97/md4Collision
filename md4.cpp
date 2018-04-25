@@ -64,6 +64,7 @@ const uint mOnPaper[17] = {
 //--------------------------------head-----------------------------------
 inline void init(){
     srand((unsigned)time(NULL));
+    //srand(465465436);
     chain[0] = 0x67452301;  // a0
     chain[1] = 0x10325476;  // d0
     chain[2] = 0x98badcfe;  // c0
