@@ -142,7 +142,7 @@ int main(){
 
         if (cnt % 1000000 == 0) {
             time_t cur_t = time(NULL);
-            printf("cnt = %d, time used: %d s\n", cnt, cur_t - start_t);
+            printf("cnt = %d, time used: %ld s\n", cnt, cur_t - start_t);
         }
     }
     return 0;
